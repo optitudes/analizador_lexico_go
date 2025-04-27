@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Analizador léxico de rust</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-6">
+<h1 class="text-3xl font-bold text-gray-800 mb-8">Escribe algo</h1>
+
+<div class="flex flex-col md:flex-row gap-6 w-full max-w-4xl">
+    <textarea
+            id="input"
+            placeholder="Empieza a escribir aquí..."
+            class="w-full md:w-1/2 h-64 p-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none bg-white"
+    ></textarea>
+
+    <input
+            id="output"
+            readonly
+            placeholder="Texto en mayúsculas aparecerá aquí..."
+            class="w-full md:w-1/2 h-16 p-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none bg-gray-200 text-gray-700 text-lg font-mono"
+    />
+</div>
+
+<script>
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+    const socket = new WebSocket('ws://' + window.location.host + '/ws');
+
+    socket.onopen = () => {
+        console.log('Conectado al servidor');
+    };
+
+    socket.onmessage = (event) => {
+        output.value = event.data;
+    };
+
+    input.addEventListener('input', () => {
+        socket.send(input.value);
+    });
+</script>
+</body>
+</html>

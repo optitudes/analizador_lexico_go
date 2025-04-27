@@ -1,21 +1,55 @@
 package main
 
 import (
-  "fmt"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
+	"github.com/gorilla/websocket"
 )
 
-//TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool { return true },
+}
 
 func main() {
-  //TIP <p>Press <shortcut actionId="ShowIntentionActions"/> when your caret is at the underlined text
-  // to see how GoLand suggests fixing the warning.</p><p>Alternatively, if available, click the lightbulb to view possible fixes.</p>
-  s := "gopher"
-  fmt.Printf("Hello and welcome, %s!\n", s)
+	http.HandleFunc("/", serveHTML)
+	http.HandleFunc("/ws", handleWebSocket)
 
-  for i := 1; i <= 5; i++ {
-	//TIP <p>To start your debugging session, right-click your code in the editor and select the Debug option.</p> <p>We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-	// for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.</p>
-	fmt.Println("i =", 100/i)
-  }
+	fmt.Println("Servidor iniciado en http://localhost:8081")
+	http.ListenAndServe(":8081", nil)
+}
+
+func serveHTML(w http.ResponseWriter, r *http.Request) {
+	data, err := ioutil.ReadFile("views/index.html")
+	if err != nil {
+		http.Error(w, "No se pudo cargar el HTML", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "text/html")
+	w.Write(data)
+}
+
+func handleWebSocket(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		fmt.Println("Error al actualizar a WebSocket:", err)
+		return
+	}
+	defer conn.Close()
+
+	for {
+		_, msg, err := conn.ReadMessage()
+		if err != nil {
+			fmt.Println("Error leyendo mensaje:", err)
+			break
+		}
+
+		upper := strings.ToUpper(string(msg))
+		if err = conn.WriteMessage(websocket.TextMessage, []byte(upper)); err != nil {
+			fmt.Println("Error enviando mensaje:", err)
+			break
+		}
+	}
 }
