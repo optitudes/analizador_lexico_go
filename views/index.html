@@ -44,11 +44,12 @@
 
     socket.onmessage = (event) => {
         const tokens = JSON.parse(event.data);
+        console.log(event.data,tokens);
         tableBody.innerHTML = '';
         tokens.forEach(token => {
             const row = `
                     <tr class="border-b border-gray-700 hover:bg-gray-700">
-                        <td class="px-4 py-2">${token.word}</td>
+                        <td class="px-4 py-2">${escapeHTML(token.word)}</td>
                         <td class="px-4 py-2">${token.category}</td>
                         <td class="px-4 py-2">${token.index}</td>
                     </tr>
@@ -60,6 +61,12 @@
     input.addEventListener('input', () => {
         socket.send(input.value);
     });
+
+    function escapeHTML(str) {
+        return str.replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+    }
 </script>
 </body>
 </html>

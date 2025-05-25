@@ -43,7 +43,19 @@ func TokenizeAndCategorize(text string) []token.Token {
 			i++
 			continue
 		}
+		if ok, newI, tokenFinded := afd.DetectStaticAccess(chars, i); ok {
+			tokenList = append(tokenList, tokenFinded)
+			i = newI
+			tokenIndex++
+			continue
+		}
 		if ok, newI, tokenFinded := afd.DetectVarTypeAssignation(chars, i); ok {
+			tokenList = append(tokenList, tokenFinded)
+			i = newI
+			tokenIndex++
+			continue
+		}
+		if ok, newI, tokenFinded := afd.DetectPassForReference(chars, i); ok {
 			tokenList = append(tokenList, tokenFinded)
 			i = newI
 			tokenIndex++
@@ -103,6 +115,12 @@ func TokenizeAndCategorize(text string) []token.Token {
 			tokenIndex++
 			continue
 		}
+		if ok, newI, tokenFinded := afd.DetectGenerics(chars, i); ok {
+			tokenList = append(tokenList, tokenFinded)
+			i = newI
+			tokenIndex++
+			continue
+		}
 		if ok, newI, tokenFinded := afd.DetectOperator(chars, i); ok {
 			tokenList = append(tokenList, tokenFinded)
 			i = newI
@@ -121,6 +139,7 @@ func TokenizeAndCategorize(text string) []token.Token {
 			tokenIndex++
 			continue
 		}
+
 		if ok, newI, tokenFinded := afd.DetectIdentifier(chars, i); ok {
 			tokenList = append(tokenList, tokenFinded)
 			i = newI

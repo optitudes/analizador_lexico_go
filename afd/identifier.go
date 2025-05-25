@@ -23,6 +23,12 @@ func DetectIdentifier(chars []rune, i int) (bool, int, token.Token) {
 	for i < textLen && isIdentifierPart(chars[i]) {
 		i++
 	}
+	// Verificar si termina en '!' (macro)
+	isMacro := false
+	if i < textLen && chars[i] == '!' {
+		isMacro = true
+		i++
+	}
 
 	word := string(chars[startPos:i])
 	category := constants.IDENTIFICADOR
@@ -30,6 +36,8 @@ func DetectIdentifier(chars []rune, i int) (bool, int, token.Token) {
 	// Verificar si es palabra reservada
 	if isReservedWord(word) {
 		category = constants.PALABRA_RESERVADA
+	} else if isMacro {
+		category = constants.MACRO
 	} else if len(word) > 10 {
 		category = constants.DESCONOCIDO
 	}

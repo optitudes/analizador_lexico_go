@@ -60,7 +60,6 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("Error al convertir a JSON:", err)
 			continue
 		}
-
 		if err := conn.WriteMessage(websocket.TextMessage, respJSON); err != nil {
 			fmt.Println("Error enviando mensaje:", err)
 			break
