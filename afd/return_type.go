@@ -1,0 +1,28 @@
+package afd
+
+import (
+	"analizadorLexico/constants"
+	"analizadorLexico/types/token"
+	"fmt"
+)
+
+// DetectArrowReturn detecta el token '->', usado en Rust para indicar tipo de retorno.
+func DetectReturnType(chars []rune, i int) (bool, int, token.Token) {
+	textLen := len(chars)
+	startPos := i
+
+	if i+1 >= textLen || chars[i] != '-' || chars[i+1] != '>' {
+		return false, i, token.Token{}
+	}
+
+	// Consumimos los dos caracteres: '-'
+	i += 2
+
+	tokenFinded := token.Token{
+		Word:     "->",
+		Category: constants.TIPO_RETORNO, // Asegúrate de definir esta constante
+		Index:    fmt.Sprintf("%d-%d", startPos, i),
+	}
+
+	return true, i, tokenFinded
+}

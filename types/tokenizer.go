@@ -49,6 +49,12 @@ func TokenizeAndCategorize(text string) []token.Token {
 			tokenIndex++
 			continue
 		}
+		if ok, newI, tokenFinded := afd.DetectReturnType(chars, i); ok {
+			tokenList = append(tokenList, tokenFinded)
+			i = newI
+			tokenIndex++
+			continue
+		}
 		if ok, newI, tokenFinded := afd.DetectVarTypeAssignation(chars, i); ok {
 			tokenList = append(tokenList, tokenFinded)
 			i = newI
