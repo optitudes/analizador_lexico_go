@@ -31,7 +31,6 @@ func DetectGenerics(chars []rune, i int) (bool, int, token.Token) {
 		}
 
 		// Agregamos cualquier caracter válido dentro sin aumentar nesting
-		// Por si quieres validar caracteres permitidos, ajusta aquí:
 		if unicode.IsLetter(c) || unicode.IsDigit(c) || c == ',' || c == ':' || c == ' ' || c == '_' || c == '<' || c == '>' {
 			sb.WriteRune(c)
 		} else {

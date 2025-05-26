@@ -61,7 +61,7 @@ func isIdentifierPart(r rune) bool {
 	return unicode.IsLetter(r) || unicode.IsDigit(r) || r == '_'
 }
 
-// Verificación de palabras reservadas implementada con búsqueda lineal
+// Verificación de palabras reservadas mediante una búsqueda lineal
 func isReservedWord(token string) bool {
 	for _, word := range constants.ReservedWords {
 		if token == word {

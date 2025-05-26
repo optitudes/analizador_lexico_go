@@ -16,7 +16,6 @@ func NewTokenizer(text string) *Tokenizer {
 		return nil
 	}
 
-	// en
 	lastChar := rune(text[len(text)-1])
 
 	if !IsSeparator(lastChar) {

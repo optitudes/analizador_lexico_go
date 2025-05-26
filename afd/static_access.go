@@ -19,7 +19,7 @@ func DetectStaticAccess(chars []rune, i int) (bool, int, token.Token) {
 
 	tokenFinded := token.Token{
 		Word:     "::",
-		Category: constants.ACCESO_ESTATICO, // Debes tener esta constante en tu paquete constants
+		Category: constants.ACCESO_ESTATICO,
 		Index:    fmt.Sprintf("%d-%d", startPos, i),
 	}
 
